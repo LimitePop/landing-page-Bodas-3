@@ -60,96 +60,40 @@ p{color:#d5d5d1}
 
 /* HEADER */
 header{
-  height:78px;
-  display:flex;
-  align-items:center;
-  padding:0 7vw;
-  border-bottom:1px solid rgba(255,255,255,.08);
+  position:sticky;top:0;z-index:50;
+  background:rgba(8,8,8,.88);backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(255,255,255,.08)
 }
-.logo{
-  font-size:22px;
-  font-weight:800;
-  letter-spacing:.02em;
+.nav{
+  min-height:76px;display:flex;align-items:center;
+  justify-content:space-between;gap:25px
 }
+.logo{font-size:20px;font-weight:800;letter-spacing:.08em}
+.navlinks{display:flex;gap:24px;font-size:14px;color:#ccc}
+.navlinks a:hover{color:#fff}
+.navcta{border:1px solid #fff;padding:11px 17px;border-radius:999px;font-weight:700;font-size:13px}
+
 /* HERO */
 .hero{
-  min-height:calc(100vh - 78px);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:80px 30px 100px;
+  min-height:88vh;display:flex;align-items:center;
+  position:relative;overflow:hidden;padding:105px 0 75px;
   background:
-    radial-gradient(circle at 50% 35%, rgba(227,79,180,.07), transparent 38%),
-    #050505;
+    radial-gradient(circle at 78% 25%,rgba(227,75,181,.13),transparent 28%),
+    radial-gradient(circle at 20% 75%,rgba(255,255,255,.07),transparent 32%),
+    linear-gradient(145deg,#121212,#050505 70%);
 }
-.hero-inner{
-  width:min(1250px, 100%);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
+.hero:after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(0,0,0,.6),transparent 60%);
+  pointer-events:none
 }
-.hero .eyebrow{
-  margin:0 0 28px;
-  color:#fff;
-  font-size:18px;
-  font-weight:600;
-  letter-spacing:.24em;
-  text-transform:uppercase;
+.hero .container{position:relative;z-index:2}
+.hero-sub{max-width:780px;font-size:clamp(20px,2vw,27px);color:#ddd}
+.stats{
+  display:flex;flex-wrap:wrap;gap:10px 24px;
+  margin-top:28px;color:#c9c9c5;font-size:15px;font-weight:700
 }
-.hero h1{
-  margin:0;
-  color:#e34fb4;
-  font-size:clamp(48px, 5.2vw, 76px);
-  line-height:.98;
-  letter-spacing:-.045em;
-  font-weight:900;
-  white-space:nowrap;
-}
-.hero .subtitle{
-  margin:34px 0 0;
-  max-width:850px;
-  color:#ededed;
-  font-size:clamp(21px, 2vw, 27px);
-  line-height:1.35;
-  font-weight:500;
-}
-.hero .cta{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  margin-top:38px;
-  min-height:58px;
-  padding:0 34px;
-  border-radius:999px;
-  background:#fff;
-  color:#090909;
-  text-decoration:none;
-  font-size:16px;
-  font-weight:800;
-  letter-spacing:.01em;
-  transition:transform .2s ease, box-shadow .2s ease;
-}
-.hero .cta:hover{
-  transform:translateY(-2px);
-  box-shadow:0 10px 30px rgba(255,255,255,.12);
-}
-.hero .proof{
-  margin-top:34px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-wrap:wrap;
-  gap:12px 30px;
-  color:#e5e5e5;
-  font-size:19px;
-  font-weight:700;
-}
-.hero .proof span{white-space:nowrap}
-.hero .stars{
-  letter-spacing:2px;
-  font-size:21px;
-}
+
 /* VIDEO */
 .video{
   aspect-ratio:16/9;border-radius:var(--radius);overflow:hidden;
@@ -372,7 +316,110 @@ footer{border-top:1px solid var(--line);padding:28px 0;color:#777;font-size:13px
 }
 
 
-/* HERO — ajustes del código Hero original */
+/* CAMBIOS SOLICITADOS — SOLO HERO + AJUSTES DE TÍTULOS */
+header{
+  height:78px;
+  display:flex;
+  align-items:center;
+  padding:0 7vw;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  background:transparent;
+  position:static;
+}
+header .logo{
+  font-size:22px;
+  font-weight:800;
+  letter-spacing:.02em;
+}
+
+.hero{
+  min-height:calc(100vh - 78px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:80px 30px 100px;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(227,79,180,.07), transparent 38%),
+    #050505;
+}
+.hero-inner{
+  width:min(1250px, 100%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+.hero .eyebrow{
+  margin:0 0 28px;
+  color:#fff;
+  font-size:18px;
+  font-weight:600;
+  letter-spacing:.24em;
+  text-transform:uppercase;
+}
+.hero h1{
+  margin:0;
+  color:#e34fb4;
+  font-size:clamp(48px, 5.2vw, 76px);
+  line-height:.98;
+  letter-spacing:-.045em;
+  font-weight:900;
+  white-space:nowrap;
+}
+.hero .subtitle{
+  margin:34px 0 0;
+  max-width:850px;
+  color:#ededed;
+  font-size:clamp(21px, 2vw, 27px);
+  line-height:1.35;
+  font-weight:500;
+}
+.hero .cta{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  margin-top:38px;
+  min-height:58px;
+  padding:0 34px;
+  border-radius:999px;
+  background:#fff;
+  color:#090909;
+  text-decoration:none;
+  font-size:16px;
+  font-weight:800;
+  letter-spacing:.01em;
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.hero .cta:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 30px rgba(255,255,255,.12);
+}
+.hero .proof{
+  margin-top:34px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:12px 30px;
+  color:#e5e5e5;
+  font-size:19px;
+  font-weight:700;
+}
+.hero .proof span{white-space:nowrap}
+.hero .proof .stars{
+  letter-spacing:2px;
+  font-size:21px;
+  color:#ffd400;
+}
+
+/* Nombres de los bloques en blanco */
+.eyebrow{color:#fff}
+
+/* Centrar únicamente el título del bloque EL MOMENTO */
+.emotion-grid > div:first-child{
+  text-align:center;
+}
+
 @media (max-width:900px){
   header{
     padding:0 24px;
@@ -397,13 +444,10 @@ footer{border-top:1px solid var(--line);padding:28px 0;color:#777;font-size:13px
     gap:10px 18px;
   }
 }
+
 @media (max-width:520px){
-  header{
-    height:68px;
-  }
-  .logo{
-    font-size:19px;
-  }
+  header{height:68px}
+  header .logo{font-size:19px}
   .hero{
     min-height:calc(100vh - 68px);
     padding-top:55px;
@@ -433,15 +477,7 @@ footer{border-top:1px solid var(--line);padding:28px 0;color:#777;font-size:13px
 <body>
 
 <header>
-  <div class="container nav">
-    <a class="logo" href="#">LÍMITE POP</a>
-    <nav class="navlinks">
-      <a href="#experiencia">La experiencia</a>
-      <a href="#repertorio">Repertorio</a>
-      <a href="#opiniones">Opiniones</a>
-    </nav>
-    <a class="navcta" href="#disponibilidad">DISPONIBILIDAD</a>
-  </div>
+  <div class="logo">LÍMITE POP</div>
 </header>
 
 <main>
