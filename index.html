@@ -493,23 +493,19 @@ header .logo{
   width:100%;
   aspect-ratio:16/9;
 }
-.media-bottom-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:18px;
-  margin-top:18px;
+
+
+/* VÍDEO BAJO LA EXPERIENCIA */
+.experience-video{
+  width:100%;
+  margin-top:42px;
 }
-.media-bottom-grid .media-card{
+.experience-video .media-card{
   width:100%;
 }
-.media-bottom-grid .media-video{
+.experience-video .media-video{
+  width:100%;
   aspect-ratio:16/9;
-}
-@media(max-width:800px){
-  .media-bottom-grid{grid-template-columns:1fr 1fr;}
-}
-@media(max-width:560px){
-  .media-bottom-grid{grid-template-columns:1fr;}
 }
 
 </style>
@@ -577,22 +573,6 @@ header .logo{
       </div>
     </div>
 
-    <div class="media-bottom-grid">
-
-        <div class="media-card">
-          <div class="media-video small">
-            <div class="play">▶</div>
-            <div class="media-tag">VÍDEO · DIRECTO</div>
-          </div>
-        </div>
-        <div class="media-card">
-          <div class="media-video small">
-            <div class="play">▶</div>
-            <div class="media-tag">VÍDEO · DIRECTO</div>
-          </div>
-        </div>
-      
-    </div>
   </div>
 </section>
 
@@ -648,6 +628,19 @@ header .logo{
         <p>La energía cambia. Nosotros sabemos acompañarla.</p>
       </article>
     </div>
+
+    <div class="experience-video">
+      <div class="media-card">
+        <div class="media-video">
+          <video autoplay muted loop playsinline preload="metadata">
+            <source src="video3.mp4" type="video/mp4">
+          </video>
+          <div class="play">▶</div>
+          <div class="media-tag">VÍDEO · DIRECTO</div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
