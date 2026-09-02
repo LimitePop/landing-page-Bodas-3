@@ -514,6 +514,31 @@ header .logo{
   aspect-ratio:16/9;
 }
 
+
+.video-center-control{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:68px;
+  height:68px;
+  border-radius:50%;
+  background:rgba(0,0,0,.62);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:28px;
+  line-height:1;
+  cursor:pointer;
+  z-index:3;
+  user-select:none;
+  transition:opacity .2s ease, transform .2s ease;
+}
+.video-center-control:hover{
+  transform:translate(-50%,-50%) scale(1.05);
+}
+
 </style>
 </head>
 
@@ -561,9 +586,10 @@ header .logo{
     <div class="media-main">
       <div class="media-card">
         <div class="media-video">
-          <video autoplay muted loop playsinline preload="metadata">
+          <video controls playsinline preload="metadata">
             <source src="video2.mp4" type="video/mp4">
           </video>
+<div class="video-center-control" aria-label="Reproducir o pausar vídeo">▶</div>
           <div class="play">▶</div>
         </div>
       </div>
@@ -639,9 +665,10 @@ header .logo{
     <div class="experience-video">
       <div class="media-card">
         <div class="media-video">
-          <video autoplay muted loop playsinline preload="metadata">
+          <video controls playsinline preload="metadata">
             <source src="video1.mp4" type="video/mp4">
           </video>
+<div class="video-center-control" aria-label="Reproducir o pausar vídeo">▶</div>
           <div class="play">▶</div>
         </div>
       </div>
@@ -792,6 +819,34 @@ header .logo{
 <footer>
   <div class="container">LÍMITE POP · Música en directo para bodas · </div>
 </footer>
+
+
+<script>
+document.querySelectorAll('.media-video').forEach(function(container){
+  const video = container.querySelector('video');
+  const button = container.querySelector('.video-center-control');
+  if (!video || !button) return;
+
+  function updateButton(){
+    button.textContent = video.paused ? '▶' : '❚❚';
+    button.setAttribute('aria-label', video.paused ? 'Reproducir vídeo' : 'Pausar vídeo');
+  }
+
+  button.addEventListener('click', function(e){
+    e.stopPropagation();
+    if (video.paused) {
+      video.play();
+    } else {
+      video.pause();
+    }
+  });
+
+  video.addEventListener('play', updateButton);
+  video.addEventListener('pause', updateButton);
+  video.addEventListener('ended', updateButton);
+  updateButton();
+});
+</script>
 
 </body>
 </html>
