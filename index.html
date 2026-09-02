@@ -551,6 +551,109 @@ header{
   height:auto;
 }
 
+
+/* VISOR PDF DEL LISTADO */
+.pdf-modal{
+  position:fixed;
+  inset:0;
+  z-index:200;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+}
+.pdf-modal.is-open{display:flex}
+.pdf-modal-backdrop{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.82);
+  backdrop-filter:blur(6px);
+}
+.pdf-modal-box{
+  position:relative;
+  z-index:1;
+  width:min(1100px,96vw);
+  height:min(88vh,900px);
+  background:#111;
+  border:1px solid #3a3a38;
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 25px 80px rgba(0,0,0,.55);
+  display:flex;
+  flex-direction:column;
+}
+.pdf-modal-header{
+  min-height:64px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  padding:12px 16px 12px 22px;
+  background:#0d0d0d;
+  border-bottom:1px solid #292927;
+  color:#f5f5f2;
+}
+.pdf-modal-actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.pdf-download{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:40px;
+  padding:0 16px;
+  border-radius:999px;
+  background:#fff;
+  color:#000;
+  font-size:12px;
+  font-weight:800;
+  text-decoration:none;
+}
+.pdf-close{
+  width:40px;
+  height:40px;
+  border:1px solid #555;
+  border-radius:50%;
+  background:transparent;
+  color:#fff;
+  font-size:28px;
+  line-height:1;
+  cursor:pointer;
+}
+.pdf-modal-box iframe{
+  width:100%;
+  flex:1;
+  min-height:0;
+  border:0;
+  background:#fff;
+}
+body.pdf-open{overflow:hidden}
+@media(max-width:600px){
+  .pdf-modal{padding:10px}
+  .pdf-modal-box{
+    width:100%;
+    height:94vh;
+    border-radius:14px;
+  }
+  .pdf-modal-header{
+    padding:10px 10px 10px 14px;
+  }
+  .pdf-modal-header strong{
+    font-size:14px;
+  }
+  .pdf-download{
+    min-height:36px;
+    padding:0 11px;
+    font-size:10px;
+  }
+  .pdf-close{
+    width:36px;
+    height:36px;
+  }
+}
+
 </style>
 </head>
 
@@ -766,7 +869,7 @@ header{
     </div>
 
     <div class="center actions" style="justify-content:center;margin-top:35px">
-      <a class="btn primary" href="https://www.youtube.com/watch?v=qoNdauYxGQE" target="_blank" rel="noopener">CONSULTA NUESTRO LISTADO DE CANCIONES</a>
+      <a class="btn primary" href="#listado-canciones" id="open-song-list">CONSULTA NUESTRO LISTADO DE CANCIONES</a>
     </div>
   </div>
 </section>
@@ -826,6 +929,26 @@ header{
   </div>
 </section>
 
+
+<!-- VISOR DEL LISTADO DE CANCIONES -->
+<div class="pdf-modal" id="listado-canciones" aria-hidden="true">
+  <div class="pdf-modal-backdrop" data-close-pdf></div>
+  <div class="pdf-modal-box" role="dialog" aria-modal="true" aria-labelledby="pdf-title">
+    <div class="pdf-modal-header">
+      <strong id="pdf-title">Listado de canciones · Límite Pop</strong>
+      <div class="pdf-modal-actions">
+        <a class="pdf-download" href="Listado-Canciones-Limite-Pop-2026.pdf" download>DESCARGAR PDF</a>
+        <button type="button" class="pdf-close" data-close-pdf aria-label="Cerrar listado">×</button>
+      </div>
+    </div>
+    <iframe
+      src="Listado-Canciones-Limite-Pop-2026.pdf"
+      title="Listado de canciones Límite Pop"
+      loading="lazy">
+    </iframe>
+  </div>
+</div>
+
 </main>
 
 <footer>
@@ -858,6 +981,39 @@ document.querySelectorAll('.media-video').forEach(function(container){
   video.addEventListener('ended', updateButton);
   updateButton();
 });
+</script>
+
+
+<script>
+(function(){
+  const modal = document.getElementById('listado-canciones');
+  const openButton = document.getElementById('open-song-list');
+  if (!modal || !openButton) return;
+
+  function openPdf(event){
+    event.preventDefault();
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden','false');
+    document.body.classList.add('pdf-open');
+  }
+
+  function closePdf(){
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden','true');
+    document.body.classList.remove('pdf-open');
+  }
+
+  openButton.addEventListener('click', openPdf);
+  modal.querySelectorAll('[data-close-pdf]').forEach(function(el){
+    el.addEventListener('click', closePdf);
+  });
+
+  document.addEventListener('keydown', function(event){
+    if (event.key === 'Escape' && modal.classList.contains('is-open')) {
+      closePdf();
+    }
+  });
+})();
 </script>
 
 </body>
