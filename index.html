@@ -1030,74 +1030,78 @@ document.querySelectorAll('.media-video').forEach(function(container){
     gtag('event', eventName);
   }
 
-  /* Botón principal del Hero */
+  /* COMPROBAR DISPONIBILIDAD */
   var heroCta = document.querySelector('.hero .cta');
   if (heroCta) {
     heroCta.addEventListener('click', function(){
-      track('hero_cta_click');
+      track('consultar_disponibilidad');
     });
   }
 
-  /* WhatsApp, teléfono y email */
+  /* SOLICITAR PRESUPUESTO */
+  document.querySelectorAll('a[href="#disponibilidad"]').forEach(function(el){
+    if (!el.classList.contains('cta')) {
+      el.addEventListener('click', function(){
+        track('solicitar_presupuesto');
+      });
+    }
+  });
+
+  /* WhatsApp */
   document.querySelectorAll('a[href^="https://wa.me/"]').forEach(function(el){
     el.addEventListener('click', function(){
       track('whatsapp_click');
     });
   });
 
+  /* Teléfonos */
   document.querySelectorAll('a[href^="tel:"]').forEach(function(el){
     el.addEventListener('click', function(){
-      track('phone_click');
+      track('telefono_click');
     });
   });
 
+  /* Email */
   document.querySelectorAll('a[href^="mailto:"]').forEach(function(el){
     el.addEventListener('click', function(){
       track('email_click');
     });
   });
 
-  /* Listado de canciones */
+  /* CONSULTA NUESTRO LISTADO DE CANCIONES */
   var songListButton = document.getElementById('open-song-list');
   if (songListButton) {
     songListButton.addEventListener('click', function(){
-      track('song_list_open');
+      track('consultar_listado');
     });
   }
 
-  /* Descarga del PDF */
+  /* DESCARGAR PDF */
   var pdfDownload = document.querySelector('.pdf-download');
   if (pdfDownload) {
     pdfDownload.addEventListener('click', function(){
-      track('pdf_download');
+      track('descargar_pdf');
     });
   }
 
-  /* Formulario: inicio y envío */
+  /* SOLICITAR DISPONIBILIDAD — envío del formulario */
   var form = document.querySelector('form');
   if (form) {
-    var formStarted = false;
-
-    form.addEventListener('focusin', function(){
-      if (!formStarted) {
-        formStarted = true;
-        track('form_start');
-      }
-    });
-
     form.addEventListener('submit', function(){
-      track('form_submit');
+      track('solicitar_disponibilidad');
     });
   }
 
-  /* Vídeos locales */
-  document.querySelectorAll('.media-video video').forEach(function(video){
+  /* VÍDEOS LOCALES */
+  document.querySelectorAll('.media-video video').forEach(function(video, index){
+    var videoNumber = index + 1;
+
     video.addEventListener('play', function(){
-      track('video_play');
+      track('video' + videoNumber + '_play');
     });
 
     video.addEventListener('ended', function(){
-      track('video_complete');
+      track('video' + videoNumber + '_complete');
     });
   });
 })();
