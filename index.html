@@ -890,7 +890,9 @@ body.pdf-open{overflow:hidden}
 
     <div class="formwrap">
       <div class="form-title">Comprobad nuestra disponibilidad</div>
-      <form onsubmit="return false;">
+      <form action="https://formsubmit.co/bodas@limitepop.com" method="POST">
+        <input type="hidden" name="_subject" value="Nueva solicitud de disponibilidad · Límite Pop">
+        <input type="hidden" name="_template" value="table">
         <label>Fecha de la boda
           <input type="date" name="fecha">
         </label>
@@ -908,7 +910,7 @@ body.pdf-open{overflow:hidden}
             <option>Cóctel + barra libre</option>
           </select>
         </label>
-        <button class="submit" type="submit">COMPROBAR DISPONIBILIDAD</button>
+        <button class="submit" type="submit">SOLICITAR DISPONIBILIDAD</button>
       </form>
 
       <div class="contact">
