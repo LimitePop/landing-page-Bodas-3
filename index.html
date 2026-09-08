@@ -6,7 +6,7 @@
 <title>Límite Pop — Música en directo para bodas</title>
 <meta name="description" content="Límite Pop. Música en directo para bodas. Vosotros disfrutáis. Nosotros nos encargamos de la música.">
 
-  <!-- Google tag (gtag.js) -->
+<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-C1HJVH3WHD"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -139,7 +139,6 @@ header{
   margin-top:28px;
 }
 
-
 /* DIFFERENTIATION */
 .feature-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
 .feature{
@@ -207,10 +206,14 @@ header{
 .form-title{text-align:center;color:#fff;font-size:21px;margin-bottom:24px}
 form{display:grid;gap:16px}
 label{font-size:14px;color:#bbb}
-input,select{
+input,select,textarea{
   width:100%;margin-top:7px;padding:15px 16px;
   border:1px solid #3a3a38;background:#0e0e0e;
   color:#fff;border-radius:12px;font:inherit
+}
+textarea{
+  min-height:130px;
+  resize:vertical;
 }
 .submit{
   border:0;background:#fff;color:#000;padding:17px;
@@ -330,7 +333,6 @@ footer{border-top:1px solid var(--line);padding:28px 0;color:#777;font-size:13px
 @media(max-width:560px){
   .media-stack,.photo-grid{grid-template-columns:1fr}
 }
-
 
 /* CAMBIOS SOLICITADOS — SOLO HERO + AJUSTES DE TÍTULOS */
 header{
@@ -488,7 +490,6 @@ header .logo{
   }
 }
 
-
 /* VÍDEO PRINCIPAL */
 .media-card .media-video > video{
   width:100%;
@@ -496,7 +497,6 @@ header .logo{
   display:block;
   object-fit:cover;
 }
-
 
 /* GALERÍA — NUEVA DISTRIBUCIÓN */
 .media-main{
@@ -511,7 +511,6 @@ header .logo{
   aspect-ratio:16/9;
 }
 
-
 /* VÍDEO BAJO LA EXPERIENCIA */
 .experience-video{
   width:100%;
@@ -524,7 +523,6 @@ header .logo{
   width:100%;
   aspect-ratio:16/9;
 }
-
 
 .video-center-control{
   position:absolute;
@@ -550,7 +548,6 @@ header .logo{
   transform:translate(-50%,-50%) scale(1.05);
 }
 
-
 /* LOGO SUPERIOR CENTRADO */
 header{
   height:110px;
@@ -561,7 +558,6 @@ header{
   width:180px;
   height:auto;
 }
-
 
 /* VISOR PDF DEL LISTADO */
 .pdf-modal{
@@ -715,7 +711,7 @@ body.pdf-open{overflow:hidden}
           <video controls playsinline preload="metadata">
             <source src="video2.mp4" type="video/mp4">
           </video>
-<div class="video-center-control" aria-label="Reproducir o pausar vídeo">▶</div>
+          <div class="video-center-control" aria-label="Reproducir o pausar vídeo">▶</div>
         </div>
       </div>
     </div>
@@ -786,7 +782,7 @@ body.pdf-open{overflow:hidden}
           <video controls playsinline preload="metadata">
             <source src="video1.mp4" type="video/mp4">
           </video>
-<div class="video-center-control" aria-label="Reproducir o pausar vídeo">▶</div>
+          <div class="video-center-control" aria-label="Reproducir o pausar vídeo">▶</div>
         </div>
       </div>
     </div>
@@ -900,20 +896,34 @@ body.pdf-open{overflow:hidden}
 
     <div class="formwrap">
       <div class="form-title">Comprobad nuestra disponibilidad</div>
+
       <form action="https://formsubmit.co/bodas@limitepop.com" method="POST">
+
         <input type="hidden" name="_subject" value="Nueva solicitud de disponibilidad · Límite Pop">
         <input type="hidden" name="_template" value="table">
         <input type="hidden" name="_next" value="https://limitepop.github.io/landing-page-Bodas-3/gracias.html">
         <input type="hidden" name="_captcha" value="false">
+
+        <label>Nombre
+          <input type="text" name="name" placeholder="Tu nombre" required>
+        </label>
+
+        <label>Correo electrónico
+          <input type="email" name="email" placeholder="Tu correo electrónico" required>
+        </label>
+
         <label>Fecha de la boda
           <input type="date" name="fecha">
         </label>
+
         <label>Lugar de celebración
           <input type="text" name="lugar" placeholder="Ciudad o finca">
         </label>
+
         <label>Número aproximado de invitados
           <input type="number" name="invitados" placeholder="Ej. 120">
         </label>
+
         <label>Formato
           <select name="formato">
             <option value="">Seleccionar</option>
@@ -922,7 +932,17 @@ body.pdf-open{overflow:hidden}
             <option>Cóctel + barra libre</option>
           </select>
         </label>
+
+        <label>¿En qué podemos ayudaros?
+          <textarea
+            name="message"
+            rows="5"
+            placeholder="Contadnos qué estáis buscando, qué tipo de celebración tenéis o cualquier información que queráis compartir."
+          ></textarea>
+        </label>
+
         <button class="submit" type="submit">SOLICITAR DISPONIBILIDAD</button>
+
       </form>
 
       <div class="contact">
