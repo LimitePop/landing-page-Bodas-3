@@ -927,7 +927,7 @@ body.pdf-open{overflow:hidden}
 
       <div class="form-title">Comprobad nuestra disponibilidad</div>
 
-      <form action="https://script.google.com/macros/s/AKfycbzzG2MoSzCLU3KEdsfnsJsFevzxL4j429YDCuSuOTdui2FOHRbbdNhRCbiFHu15OXWU/exec" method="POST">
+      <form action="https://script.google.com/macros/s/AKfycbzzG2MoSzCLU3KEdsfnsJsFevzxL4j429YDCuSuOTdui2FOHRbbdNhRCbiFHu15OXWU/exec" method="POST" target="form-response">
 
         <label>Nombre
           <input type="text" name="name" placeholder="Tu nombre" required>
@@ -969,6 +969,8 @@ body.pdf-open{overflow:hidden}
         <button class="submit" type="submit">SOLICITAR DISPONIBILIDAD</button>
 
       </form>
+
+      <iframe name="form-response" style="display:none;"></iframe>
 
       <div class="contact">
         <a href="tel:+34629789876">☎ 629 789 876</a>
@@ -1162,15 +1164,20 @@ document.querySelectorAll('.media-video').forEach(function(container){
 
   }
 
-  /* SOLICITAR DISPONIBILIDAD — envío del formulario */
-  var form = document.querySelector('form');
+/* SOLICITAR DISPONIBILIDAD – envío del formulario */
+var form = document.querySelector('form');
 
-  if (form) {
+if (form) {
 
-    form.addEventListener('submit', function(){
-      track('solicitar_disponibilidad');
-    });
+  form.addEventListener('submit', function(){
+    track('solicitar_disponibilidad');
 
+    setTimeout(function(){
+      window.location.href = 'gracias.html';
+    }, 2000);
+  });
+
+}
   }
 
   /* VÍDEOS LOCALES */
