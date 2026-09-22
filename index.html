@@ -1022,17 +1022,14 @@ body.pdf-open{overflow:hidden}
 </footer>
 
 <script>
-/* VÍDEOS: AUTOPLAY SOLO EN PANTALLA + BUCLE + CONTROLES MANUALES */
+/* VÍDEOS: AUTOPLAY EN PANTALLA + PAUSA FUERA + BUCLE */
 document.querySelectorAll('.media-video').forEach(function(container){
   const video = container.querySelector('video');
   const button = container.querySelector('.video-center-control');
   if (!video || !button) return;
 
-  /* Si el usuario lo pausa manualmente, respetamos esa decisión */
-  let userPaused = false;
-
-  /* Evita confundir una pausa automática con una pausa hecha por el usuario */
-  let autoPausing = false;
+  /* true solo cuando la pausa la provoca el sistema al salir de pantalla */
+  let automaticPause = false;
 
   function updateButton(){
     button.textContent = video.paused ? '▶' : '❚❚';
@@ -1042,34 +1039,32 @@ document.querySelectorAll('.media-video').forEach(function(container){
     );
   }
 
-  /* Botón central: reproducir / pausar */
+  /* Botón central */
   button.addEventListener('click', function(e){
     e.stopPropagation();
 
     if (video.paused) {
-      userPaused = false;
       video.play().catch(function(){});
     } else {
-      userPaused = true;
       video.pause();
     }
   });
 
   /*
-   * Pausa desde los controles nativos.
-   * Solo la consideramos "manual" si no estamos pausando
-   * porque el vídeo ha salido de la pantalla.
+   * Si se pausa mediante los controles nativos, es una pausa del usuario.
+   * Si se pausa desde IntersectionObserver, NO guardamos esa pausa:
+   * al volver a pantalla deberá arrancar otra vez.
    */
   video.addEventListener('pause', function(){
-    if (!autoPausing && !video.ended) {
-      userPaused = true;
+    if (automaticPause) {
+      /* Pausa automática: no hacemos nada más */
+      automaticPause = false;
     }
+
     updateButton();
   });
 
-  /* Si el usuario vuelve a darle a reproducir, vuelve a permitirse el autoplay */
   video.addEventListener('play', function(){
-    userPaused = false;
     updateButton();
   });
 
@@ -1078,35 +1073,30 @@ document.querySelectorAll('.media-video').forEach(function(container){
   updateButton();
 
   /*
-   * CONTROL DE VISIBILIDAD
+   * Solo se reproduce cuando está suficientemente visible.
+   * Al salir de la zona visible se pausa.
    *
-   * Cuando el vídeo está suficientemente visible:
-   *   -> reproduce automáticamente.
-   *
-   * Cuando deja de estar suficientemente visible:
-   *   -> se pausa.
-   *
-   * Al volver a entrar:
-   *   -> vuelve a reproducirse, salvo que el usuario lo
-   *      hubiera pausado manualmente.
+   * MUY IMPORTANTE:
+   * la pausa automática NO bloquea el siguiente autoplay.
    */
   const observer = new IntersectionObserver(function(entries){
     entries.forEach(function(entry){
+
       if (entry.isIntersecting) {
 
-        if (!userPaused && video.paused) {
+        if (video.paused) {
           video.play().catch(function(){});
         }
 
       } else {
 
         if (!video.paused) {
-          autoPausing = true;
+          automaticPause = true;
           video.pause();
-          autoPausing = false;
         }
 
       }
+
     });
   }, {
     threshold: 0.35
