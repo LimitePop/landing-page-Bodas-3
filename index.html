@@ -709,7 +709,7 @@ body.pdf-open{overflow:hidden}
     <div class="media-main">
       <div class="media-card">
         <div class="media-video">
-          <video controls playsinline muted preload="metadata">
+          <video controls playsinline preload="metadata">
             <source src="video2.mp4" type="video/mp4">
           </video>
           <div class="video-center-control" aria-label="Reproducir o pausar vídeo">▶</div>
@@ -787,7 +787,7 @@ body.pdf-open{overflow:hidden}
     <div class="experience-video">
       <div class="media-card">
         <div class="media-video">
-          <video controls playsinline muted preload="metadata">
+          <video controls playsinline preload="metadata">
             <source src="video1.mp4" type="video/mp4">
           </video>
           <div class="video-center-control" aria-label="Reproducir o pausar vídeo">▶</div>
@@ -1022,13 +1022,13 @@ body.pdf-open{overflow:hidden}
 </footer>
 
 <script>
-/* VÍDEOS: CONTROLES + AUTOPLAY AL ENTRAR EN PANTALLA */
+/* VÍDEOS: AUTOPLAY + BUCLE + CONTROLES MANUALES */
 document.querySelectorAll('.media-video').forEach(function(container){
   const video = container.querySelector('video');
   const button = container.querySelector('.video-center-control');
   if (!video || !button) return;
 
-  let autoPause = false;
+  /* Solo se queda parado si el usuario lo pausa manualmente */
   let userPaused = false;
 
   function updateButton(){
@@ -1039,6 +1039,7 @@ document.querySelectorAll('.media-video').forEach(function(container){
     );
   }
 
+  /* Botón central: reproducir / pausar */
   button.addEventListener('click', function(e){
     e.stopPropagation();
 
@@ -1051,8 +1052,9 @@ document.querySelectorAll('.media-video').forEach(function(container){
     }
   });
 
+  /* Si el usuario pausa desde los controles nativos, respetamos su decisión */
   video.addEventListener('pause', function(){
-    if (!autoPause && !video.ended) {
+    if (!video.ended) {
       userPaused = true;
     }
     updateButton();
@@ -1067,22 +1069,22 @@ document.querySelectorAll('.media-video').forEach(function(container){
 
   updateButton();
 
+  /*
+   * Cada vez que el vídeo entra en la zona visible:
+   * se reproduce automáticamente si el usuario no lo ha pausado.
+   *
+   * Al salir de pantalla NO se pausa.
+   * El atributo loop hace que se repita continuamente.
+   */
   const observer = new IntersectionObserver(function(entries){
     entries.forEach(function(entry){
-      if (entry.isIntersecting) {
-        if (!userPaused) {
-          if (video.ended) video.currentTime = 0;
-          video.play().catch(function(){});
-        }
-      } else {
-        if (!video.paused) {
-          autoPause = true;
-          video.pause();
-          autoPause = false;
-        }
+      if (entry.isIntersecting && !userPaused && video.paused) {
+        video.play().catch(function(){});
       }
     });
-  }, { threshold: 0.35 });
+  }, {
+    threshold: 0.35
+  });
 
   observer.observe(video);
 });
