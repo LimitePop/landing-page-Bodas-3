@@ -709,7 +709,7 @@ body.pdf-open{overflow:hidden}
     <div class="media-main">
       <div class="media-card">
         <div class="media-video">
-          <video controls playsinline preload="metadata">
+          <video controls playsinline muted preload="metadata">
             <source src="video2.mp4" type="video/mp4">
           </video>
           <div class="video-center-control" aria-label="Reproducir o pausar vídeo">▶</div>
@@ -787,7 +787,7 @@ body.pdf-open{overflow:hidden}
     <div class="experience-video">
       <div class="media-card">
         <div class="media-video">
-          <video controls playsinline preload="metadata">
+          <video controls playsinline muted preload="metadata">
             <source src="video1.mp4" type="video/mp4">
           </video>
           <div class="video-center-control" aria-label="Reproducir o pausar vídeo">▶</div>
@@ -1022,31 +1022,69 @@ body.pdf-open{overflow:hidden}
 </footer>
 
 <script>
+/* VÍDEOS: CONTROLES + AUTOPLAY AL ENTRAR EN PANTALLA */
 document.querySelectorAll('.media-video').forEach(function(container){
   const video = container.querySelector('video');
   const button = container.querySelector('.video-center-control');
   if (!video || !button) return;
 
+  let autoPause = false;
+  let userPaused = false;
+
   function updateButton(){
     button.textContent = video.paused ? '▶' : '❚❚';
-    button.setAttribute('aria-label', video.paused ? 'Reproducir vídeo' : 'Pausar vídeo');
+    button.setAttribute(
+      'aria-label',
+      video.paused ? 'Reproducir vídeo' : 'Pausar vídeo'
+    );
   }
 
   button.addEventListener('click', function(e){
     e.stopPropagation();
 
     if (video.paused) {
-      video.play();
+      userPaused = false;
+      video.play().catch(function(){});
     } else {
+      userPaused = true;
       video.pause();
     }
   });
 
-  video.addEventListener('play', updateButton);
-  video.addEventListener('pause', updateButton);
+  video.addEventListener('pause', function(){
+    if (!autoPause && !video.ended) {
+      userPaused = true;
+    }
+    updateButton();
+  });
+
+  video.addEventListener('play', function(){
+    userPaused = false;
+    updateButton();
+  });
+
   video.addEventListener('ended', updateButton);
 
   updateButton();
+
+  const observer = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if (entry.isIntersecting) {
+        if (!userPaused) {
+          if (video.ended) video.currentTime = 0;
+          video.play().catch(function(){});
+        }
+      } else {
+        if (!video.paused) {
+          autoPause = true;
+          video.pause();
+          autoPause = false;
+        }
+      }
+    });
+  }, { threshold: 0.35 });
+
+  observer.observe(video);
 });
 </script>
 
