@@ -709,7 +709,7 @@ body.pdf-open{overflow:hidden}
     <div class="media-main">
       <div class="media-card">
         <div class="media-video">
-          <video controls playsinline preload="metadata">
+          <video controls playsinline muted loop preload="metadata">
             <source src="video2.mp4" type="video/mp4">
           </video>
           <div class="video-center-control" aria-label="Reproducir o pausar vídeo">▶</div>
@@ -787,7 +787,7 @@ body.pdf-open{overflow:hidden}
     <div class="experience-video">
       <div class="media-card">
         <div class="media-video">
-          <video controls playsinline preload="metadata">
+          <video controls playsinline muted loop preload="metadata">
             <source src="video1.mp4" type="video/mp4">
           </video>
           <div class="video-center-control" aria-label="Reproducir o pausar vídeo">▶</div>
@@ -1022,14 +1022,17 @@ body.pdf-open{overflow:hidden}
 </footer>
 
 <script>
-/* VÍDEOS: AUTOPLAY + BUCLE + CONTROLES MANUALES */
+/* VÍDEOS: AUTOPLAY SOLO EN PANTALLA + BUCLE + CONTROLES MANUALES */
 document.querySelectorAll('.media-video').forEach(function(container){
   const video = container.querySelector('video');
   const button = container.querySelector('.video-center-control');
   if (!video || !button) return;
 
-  /* Solo se queda parado si el usuario lo pausa manualmente */
+  /* Si el usuario lo pausa manualmente, respetamos esa decisión */
   let userPaused = false;
+
+  /* Evita confundir una pausa automática con una pausa hecha por el usuario */
+  let autoPausing = false;
 
   function updateButton(){
     button.textContent = video.paused ? '▶' : '❚❚';
@@ -1052,14 +1055,19 @@ document.querySelectorAll('.media-video').forEach(function(container){
     }
   });
 
-  /* Si el usuario pausa desde los controles nativos, respetamos su decisión */
+  /*
+   * Pausa desde los controles nativos.
+   * Solo la consideramos "manual" si no estamos pausando
+   * porque el vídeo ha salido de la pantalla.
+   */
   video.addEventListener('pause', function(){
-    if (!video.ended) {
+    if (!autoPausing && !video.ended) {
       userPaused = true;
     }
     updateButton();
   });
 
+  /* Si el usuario vuelve a darle a reproducir, vuelve a permitirse el autoplay */
   video.addEventListener('play', function(){
     userPaused = false;
     updateButton();
@@ -1070,16 +1078,34 @@ document.querySelectorAll('.media-video').forEach(function(container){
   updateButton();
 
   /*
-   * Cada vez que el vídeo entra en la zona visible:
-   * se reproduce automáticamente si el usuario no lo ha pausado.
+   * CONTROL DE VISIBILIDAD
    *
-   * Al salir de pantalla NO se pausa.
-   * El atributo loop hace que se repita continuamente.
+   * Cuando el vídeo está suficientemente visible:
+   *   -> reproduce automáticamente.
+   *
+   * Cuando deja de estar suficientemente visible:
+   *   -> se pausa.
+   *
+   * Al volver a entrar:
+   *   -> vuelve a reproducirse, salvo que el usuario lo
+   *      hubiera pausado manualmente.
    */
   const observer = new IntersectionObserver(function(entries){
     entries.forEach(function(entry){
-      if (entry.isIntersecting && !userPaused && video.paused) {
-        video.play().catch(function(){});
+      if (entry.isIntersecting) {
+
+        if (!userPaused && video.paused) {
+          video.play().catch(function(){});
+        }
+
+      } else {
+
+        if (!video.paused) {
+          autoPausing = true;
+          video.pause();
+          autoPausing = false;
+        }
+
       }
     });
   }, {
