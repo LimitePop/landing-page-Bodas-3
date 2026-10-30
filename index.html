@@ -1120,125 +1120,111 @@ document.querySelectorAll('.media-video').forEach(function(container){
 </script>
 
 <script>
-/* SEGUIMIENTO PERSONALIZADO DE CONVERSIONES · GOOGLE ANALYTICS */
+/* SEGUIMIENTO DE INTERACCIONES · GOOGLE ANALYTICS 4 */
 (function(){
-  if (typeof gtag !== 'function') return;
+  if (typeof window.gtag !== 'function') return;
 
-  function track(eventName){
-    gtag('event', eventName);
+  function sendEvent(eventName, parameters){
+    window.gtag('event', eventName, Object.assign({
+      send_to: 'G-C1HJVH3WHD'
+    }, parameters || {}));
   }
 
-  /* COMPROBAR DISPONIBILIDAD */
-  var heroCta = document.querySelector('.hero .cta');
-
-  if (heroCta) {
-    heroCta.addEventListener('click', function(){
-      track('consultar_disponibilidad');
+  /* Botón principal: comprobar disponibilidad */
+  document.querySelectorAll('.hero .cta').forEach(function(el){
+    el.addEventListener('click', function(){
+      sendEvent('consultar_disponibilidad', {link_text: el.textContent.trim()});
     });
-  }
+  });
 
-  /* SOLICITAR PRESUPUESTO */
+  /* Solicitud de presupuesto */
   document.querySelectorAll('a[href="#disponibilidad"]').forEach(function(el){
-
     if (!el.classList.contains('cta')) {
-
       el.addEventListener('click', function(){
-        track('solicitar_presupuesto');
+        sendEvent('solicitar_presupuesto', {link_text: el.textContent.trim()});
       });
-
     }
-
   });
 
-  /* WhatsApp */
+  /* Contacto: WhatsApp, teléfono y correo */
   document.querySelectorAll('a[href^="https://wa.me/"]').forEach(function(el){
-
     el.addEventListener('click', function(){
-      track('whatsapp_click');
+      sendEvent('whatsapp_click');
     });
-
   });
 
-  /* Teléfonos */
   document.querySelectorAll('a[href^="tel:"]').forEach(function(el){
-
     el.addEventListener('click', function(){
-      track('telefono_click');
+      sendEvent('telefono_click', {link_url: el.getAttribute('href')});
     });
-
   });
 
-  /* Email */
   document.querySelectorAll('a[href^="mailto:"]').forEach(function(el){
-
     el.addEventListener('click', function(){
-      track('email_click');
+      sendEvent('email_click');
     });
-
   });
 
-  /* CONSULTA NUESTRO LISTADO DE CANCIONES */
+  /* Consulta del repertorio y descarga del PDF */
   var songListButton = document.getElementById('open-song-list');
-
   if (songListButton) {
-
     songListButton.addEventListener('click', function(){
-      track('consultar_listado');
+      sendEvent('consultar_listado');
     });
-
   }
 
-  /* DESCARGAR PDF */
   var pdfDownload = document.querySelector('.pdf-download');
-
   if (pdfDownload) {
-
     pdfDownload.addEventListener('click', function(){
-      track('descargar_pdf');
+      sendEvent('descargar_pdf', {
+        file_name: 'Listado-Canciones-Limite-Pop-2026.pdf'
+      });
     });
-
   }
 
-/* SOLICITAR DISPONIBILIDAD – envío del formulario */
-var form = document.querySelector('form');
-
-if (form) {
-
-  form.addEventListener('submit', function(){
-    track('solicitar_disponibilidad');
-
-    setTimeout(function(){
-      window.location.href = 'https://limitepop.github.io/landing-page-Bodas-3/gracias.html';
-    }, 2000);
-  });
-
-}
+  /* Envío del formulario: se conserva el envío actual y una sola redirección */
+  var form = document.querySelector('form');
+  if (form) {
+    form.addEventListener('submit', function(){
+      sendEvent('solicitar_disponibilidad');
+      window.setTimeout(function(){
+        window.location.href = 'https://limitepop.github.io/landing-page-Bodas-3/gracias.html';
+      }, 2000);
+    });
   }
 
-  /* VÍDEOS LOCALES */
+  /* Vídeos MP4 alojados en la propia web */
   document.querySelectorAll('.media-video video').forEach(function(video, index){
-
-    var videoNumber = index + 1;
+    var videoName = 'video' + (index + 1);
+    var started = false;
+    var sentMilestones = {};
 
     video.addEventListener('play', function(){
-      track('video' + videoNumber + '_play');
+      if (!started) {
+        started = true;
+        sendEvent('video_start', {video_name: videoName});
+      }
+    });
+
+    video.addEventListener('timeupdate', function(){
+      if (!isFinite(video.duration) || video.duration <= 0) return;
+      var progress = (video.currentTime / video.duration) * 100;
+      [25, 50, 75].forEach(function(mark){
+        if (progress >= mark && !sentMilestones[mark]) {
+          sentMilestones[mark] = true;
+          sendEvent('video_progress', {
+            video_name: videoName,
+            video_percent: mark
+          });
+        }
+      });
     });
 
     video.addEventListener('ended', function(){
-      track('video' + videoNumber + '_complete');
+      sendEvent('video_complete', {video_name: videoName});
     });
-
   });
-
 })();
-</script>
-
-<script>
-document.querySelector('form').addEventListener('submit', function(){
-  setTimeout(function(){
-    window.location.href = 'https://limitepop.github.io/landing-page-Bodas-3/gracias.html';
-  }, 2000);
-});
 </script>
 
 </body>
